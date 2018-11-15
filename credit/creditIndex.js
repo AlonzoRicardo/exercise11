@@ -1,11 +1,13 @@
+require('dotenv').config()
 const http = require("http");
 const express = require("express");
 const kue = require("kue");
-let queue = kue.createQueue({
+const logger = require('./src/winston/winston')
+let queue = kue.createQueue(/* {
   redis: {
     host: "redis"
   }
-});
+} */);
 
 module.exports = queue;
 
@@ -43,7 +45,7 @@ app.post(
 );
 
 app.use(function(err, req, res, next) {
-  console.log(res.body);
+  logger.info(res.body);
   if (err instanceof ValidationError) {
     res.sendStatus(400);
   } else {
@@ -55,6 +57,6 @@ require("./src/queue/consumers/checkBalanceConsumer");
 require("./src/queue/consumers/rollBackConsumer");
 require("./src/queue/enqueuers/enqueueSendMessage");
 
-app.listen(9008, function() {
-  console.log("Credit Container started on PORT 9008");
+app.listen(process.env.PORT, function() {
+  logger.info(`Credit Container started on PORT ${process.env.PORT}`);
 });

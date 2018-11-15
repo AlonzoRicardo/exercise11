@@ -1,6 +1,7 @@
 let queue = require('../../../creditIndex')
 const updateCreditTransaction = require("../../transactions/updateCredit");
 const Message = require("../../models/message");
+const logger = require('../../winston/winston')
 
 function rollBackCredit(job, done) {
   const MessageModel = Message();
@@ -20,7 +21,7 @@ function rollBackCredit(job, done) {
         return error;
       } else {
         done()
-        console.log("ROLLBACK SUCCESFUL!");
+        logger.info("ROLLBACK SUCCESFUL!");
       }
     }
   );

@@ -65,18 +65,18 @@ services:
   #  environment:
   #  - PORT=9007
   #  - SERVICE_NAME=service-v2
-  credit:
-    build: credit/
-    ports:
-      - "9008:9008"
-    links:
-      - mongodb_credit
-      - replica_credit
-      - redis
-    depends_on:
-      - mongodb_credit
-      - replica_credit
-      - redis
+  #credit:
+  #  build: credit/
+  #  ports:
+  #    - "9008:9008"
+  #  links:
+  #    - mongodb_credit
+  #    - replica_credit
+  #    - redis
+  #  depends_on:
+  #    - mongodb_credit
+  #    - replica_credit
+  #    - redis
 
   messageapp:
     image: cabify/backend-bootcamp-messageapp:exercise10

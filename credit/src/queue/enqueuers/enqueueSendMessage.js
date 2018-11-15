@@ -1,5 +1,5 @@
 const queue = require("../../../creditIndex");
-const debug = require("debug")("credit:queue");
+const logger = require('../../winston/winston')
 
 module.exports = (job, enoughBalance) => {
   let isThereBalance = enoughBalance;
@@ -10,6 +10,6 @@ module.exports = (job, enoughBalance) => {
     })
     .ttl(6000)
     .save(function(err) {
-      debug(`queue entry number: ${job2.id}`);
+      logger.verbose(`queue entry number: ${job2.id}`);
     });
 };

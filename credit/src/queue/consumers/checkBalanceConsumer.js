@@ -3,11 +3,11 @@ const addToQ = require("../enqueuers/enqueueSendMessage");
 const Message = require("../../models/message");
 const getCredit = require("../../clients/getCredit");
 const updateCreditTransaction = require("../../transactions/updateCredit");
-const debugError = require("debug")("credit:error");
+const logger = require('../../winston/winston')
 
 function cb(_result, error) {
   if (error) {
-    debugError(error);
+    logger.error(`${error}`);
   }
 }
 
@@ -41,7 +41,7 @@ function decreaseBalance(job, enoughBalance, done) {
         return cb(undefined, error);
       } else if (doc == undefined) {
         let error = "Not enough credit";
-        debugError(error);
+        logger.error(`${error}`);
         cb(undefined, error);
       } else {
         done();
@@ -59,6 +59,6 @@ queue.process("check balance", function(job, done) {
       if (response) decreaseBalance(job, response, done);
     })
     .catch(err => {
-      debugError(err);
+      logger.error(`${err}`);
     });
 });

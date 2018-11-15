@@ -9,7 +9,7 @@ module.exports = function(messageParams, cb) {
   if (message.status == "OK") {
     saveMessageTransaction(messageParams, cb);
   } else if (message.status == "ERROR") {
-    logger.log({level: info, message: 'Enters rollback procedure!'});
+    logger.info('Enters rollback procedure!');
     rollBack(messageParams);
     cb();
   }

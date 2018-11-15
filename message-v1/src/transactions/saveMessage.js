@@ -42,7 +42,7 @@ function saveMessageTransaction(newValue) {
       return clone;
     })
     .catch(err => {
-      logger.log({level: error, message: `Error while saving message: ${err}`});
+      logger.error(`Error while saving message: ${err}`);
       throw err;
     });
 }

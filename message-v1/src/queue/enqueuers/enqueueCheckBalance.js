@@ -34,10 +34,10 @@ module.exports = function(req, res) {
 queue.on("job enqueue", function(id, type) {
   queue.inactiveCount(function(err, total) {
     if (total > 10) {
-      logger.warn("We need some back pressure here, from enqueue", total);
+      logger.warn(`We need some back pressure here, from enqueue ${total}`);
       isQueueBusy = true;
     } else {
-      logger.info(`Job ${id} got queued of type ${type}`, id, type);
+      logger.verbose(`Job ${id} got queued of type ${type}`, `${id, type}`);
     }
   });
 });
@@ -45,10 +45,10 @@ queue.on("job enqueue", function(id, type) {
 queue.on("job complete", function(id, result) {
   queue.inactiveCount(function(err, total) {
     if (total <= 5) {
-      logger.info("Renabling service..., from job complete", total);
+      logger.info(`Renabling service... ${total}`);
       isQueueBusy = false;
     } else {
-      logger.warn("We need some back pressure here, from job complete", total);
+      logger.warn(`We need some back pressure here... ${total}`);
     }
   });
 });

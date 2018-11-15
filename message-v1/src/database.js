@@ -22,7 +22,7 @@ function createConnection(name, server, database) {
 
 function setupConnection(connection, backup) {
   connection.conn.on("disconnected", () => {
-    dbLogger.log('error', `Node down: ${connection.name}`);
+    dbLogger.error(`Node down: ${connection.name}`);
     connection.isActive = false;
     if (connection.isPrimary) {
       connection.isPrimary = false;
@@ -30,7 +30,7 @@ function setupConnection(connection, backup) {
     }
   });
   connection.conn.on("reconnected", () => {
-    dbLogger.log('info', `Node up: ${connection.name}`);
+    dbLogger.info(`Node up: ${connection.name}`);
     connection.isActive = true;
     connection.isPrimary = !backup.isPrimary;
   });
@@ -54,15 +54,15 @@ module.exports = {
       conn = connections.find(connection => connection.isPrimary == false);
     }
     if (conn) {
-      dbLogger.log('info', `Requested connection: ${dbKey}`);
-      dbLogger.log('info', `Found: ${conn.name}`);
+      dbLogger.info(`Requested connection: ${dbKey}`);
+      dbLogger.silly(`Found: ${conn.name}`);
     }
     return conn.conn;
   },
 
   isReplicaOn: function() {
     replicaOn = connections[0].isActive && connections[1].isActive;
-    dbLogger.log('info', `Replica is ${replicaOn ? "ON" : "OFF"}`);
+    dbLogger.info(`Replica is ${replicaOn ? "ON" : "OFF"}`);
     return replicaOn;
   }
 };

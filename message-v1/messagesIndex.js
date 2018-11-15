@@ -76,8 +76,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(process.env.PORT, function() {
-  logger.log({
-    level: "info",
-    message: "Message App started on PORT 9007"
-  });
+  logger.info("Message App started on PORT 9007");
 });
