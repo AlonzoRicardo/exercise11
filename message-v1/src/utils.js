@@ -1,4 +1,3 @@
-const debug = require("debug")("util");
 const os = require("os");
 const hostname = os.hostname();
 const logger = require('./winston/winston')

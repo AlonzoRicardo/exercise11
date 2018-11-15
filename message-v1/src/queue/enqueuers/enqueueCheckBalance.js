@@ -1,8 +1,8 @@
 const kue = require("kue");
 let queue = require("../../../messagesIndex");
 const uuidv4 = require("uuid/v4");
-const debug = require("debug")("message:queue");
 const brake = require("../../../circuitBreaker");
+const logger = require('../../winston/winston')
 let isQueueBusy = false;
 
 module.exports = function(req, res) {
@@ -34,10 +34,10 @@ module.exports = function(req, res) {
 queue.on("job enqueue", function(id, type) {
   queue.inactiveCount(function(err, total) {
     if (total > 10) {
-      debug("We need some back pressure here, from enqueue", total);
+      logger.warn("We need some back pressure here, from enqueue", total);
       isQueueBusy = true;
     } else {
-      debug("Job %s got queued of type %s", id, type);
+      logger.info(`Job ${id} got queued of type ${type}`, id, type);
     }
   });
 });
@@ -45,10 +45,10 @@ queue.on("job enqueue", function(id, type) {
 queue.on("job complete", function(id, result) {
   queue.inactiveCount(function(err, total) {
     if (total <= 5) {
-      debug("Renabling service..., from job complete", total);
+      logger.info("Renabling service..., from job complete", total);
       isQueueBusy = false;
     } else {
-      debug("We need some back pressure here, from job complete", total);
+      logger.warn("We need some back pressure here, from job complete", total);
     }
   });
 });

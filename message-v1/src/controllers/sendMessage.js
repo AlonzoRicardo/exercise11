@@ -1,7 +1,5 @@
 const http = require("http");
 const saveMessage = require("../clients/saveMessage");
-const debugError = require("debug")("message:error");
-const debugTimeout = require("debug")("message:timeout");
 const random = n => Math.floor(Math.random() * Math.floor(n));
 const braker = require("../../circuitBreaker");
 const logger = require('../winston/winston')
