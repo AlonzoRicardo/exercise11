@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const dbLogger = require('../src/winston/dbLogger')
 const servers = {
-  // primary: "mongodb_credit:27037",
-  // replica: "replica_credit:27038"
-   primary: "127.0.0.1:27037",
-   replica: "127.0.0.1:27038"
+   primary: "mongodb_credit:27037",
+   replica: "replica_credit:27038"
+  // primary: "127.0.0.1:27037",
+  // replica: "127.0.0.1:27038"
 };
 const database = "cabify_bootcamp";
 

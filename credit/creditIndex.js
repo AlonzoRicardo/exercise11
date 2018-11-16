@@ -3,11 +3,11 @@ const http = require("http");
 const express = require("express");
 const kue = require("kue");
 const logger = require('./src/winston/winston')
-let queue = kue.createQueue(/* {
+let queue = kue.createQueue({
   redis: {
     host: "redis"
   }
-} */);
+});
 
 module.exports = queue;
 

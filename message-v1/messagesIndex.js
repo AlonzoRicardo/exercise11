@@ -3,18 +3,18 @@ const http = require("http");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("./src/winston/winston");
-
+const request_ratio = require("./prom/Metrics");
 const {
   Validator,
   ValidationError
 } = require("express-json-validator-middleware");
 
 const kue = require("kue");
-let queue = kue.createQueue(/* {
+let queue = kue.createQueue({
   redis: {
     host: "redis"
   }
-} */);
+});
 module.exports = queue;
 
 const getMessages = require("./src/controllers/getMessages");
@@ -50,6 +50,12 @@ require("./src/queue/consumers/sendConsumer");
 require("./src/queue/enqueuers/enqueueRollBack");
 const enqueue = require("./src/queue/enqueuers/enqueueCheckBalance");
 
+  app.use(function(req, res, next) {
+    request_ratio();
+    next();
+  })
+
+
 //End Points
 app.post(
   "/messages",
@@ -65,6 +71,19 @@ app.get("/messages", getMessages);
 app.get("/hostname", getHostName);
 
 app.get("/version", getApiVersion);
+
+//////////////////////////////////////////
+const util = require("util");
+const Prometheus = require("prom-client");
+
+Prometheus.collectDefaultMetrics();
+
+function sendMetrics(req, res) {
+  res.set("Content-Type", Prometheus.register.contentType);
+  res.end(Prometheus.register.metrics());
+}
+
+app.get("/metrics", sendMetrics);
 
 app.use(function(err, req, res, next) {
   logger.info(res.body);
