@@ -3,6 +3,7 @@ const saveMessage = require("../clients/saveMessage");
 const random = n => Math.floor(Math.random() * Math.floor(n));
 const braker = require("../../circuitBreaker");
 const logger = require('../winston/winston')
+const countError = require('../../prom/Metrics')
 
 module.exports = function(msgData, done) {
   const entireMsg = msgData;
@@ -38,6 +39,7 @@ module.exports = function(msgData, done) {
                 },
                 function(_result, error) {
                   if (error) {
+                    countError()
                     logger.error(error);
                   } else {
                     logger.info('enters cb');
@@ -48,6 +50,7 @@ module.exports = function(msgData, done) {
               done();
               return resolve("resolved succesfully");
             } else {
+              countError()
               logger.error("Error while sending message");
               saveMessage(
                 {
@@ -57,6 +60,7 @@ module.exports = function(msgData, done) {
                   status: "ERROR"
                 },
                 () => {
+                  countError()
                   logger.error("Internal server error: SERVICE ERROR");
                 }
               );
@@ -87,6 +91,7 @@ module.exports = function(msgData, done) {
           });
 
           postReq.on("error", err => {
+            countError()
             logger.error("err");
           });
           postReq.write(body);
@@ -102,9 +107,11 @@ module.exports = function(msgData, done) {
         logger.info(`result: ${result}`);
       })
       .catch(err => {
+        countError()
         logger.error(`${err}`);
       });
   } else {
+    countError()
     logger.error("No credit error");
   }
 };

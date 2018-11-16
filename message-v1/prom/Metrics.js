@@ -1,10 +1,14 @@
-let client = require('prom-client');
-//let gauge = new client.Gauge({name: 'Request_ratio', help: 'metric_help'});
-let b = new client.Histogram('metric_name', 'metric_help', {
-    buckets: [ 0.10, 5, 15, 50, 100, 500 ]
-});
+var client = require('prom-client');
+var gauge = new client.Gauge({name: 'Error_Gauge', help: 'Error_Gauge'});
 
-module.exports = () => {
-    b()
+setInterval(() => {
+    gauge.set(0); // Set to 10
+}, 1000);
+
+function countError () {
     gauge.inc(1, new Date())
+}
+
+module.exports = {
+    countError
 }

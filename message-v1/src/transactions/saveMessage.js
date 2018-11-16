@@ -2,6 +2,8 @@ const database = require("../database");
 const Message = require("../models/message");
 const { cleanClone } = require("../utils");
 const logger = require("../winston/winston");
+const countError = require('../../prom/Metrics')
+
 
 function saveMessageReplica(replica, retries) {
   if (retries > 0) {
@@ -42,6 +44,7 @@ function saveMessageTransaction(newValue) {
       return clone;
     })
     .catch(err => {
+      countError()
       logger.error(`Error while saving message: ${err}`);
       throw err;
     });

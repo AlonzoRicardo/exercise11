@@ -1,5 +1,7 @@
 const Brakes = require("brakes");
 const logger = require("./src/winston/winston");
+const countError = require("./prom/Metrics");
+
 const options = {
   timeout: 1000,
   threshold: 1,
@@ -11,6 +13,7 @@ const options = {
 const brake = new Brakes(options);
 
 brake.on("failure", snapshot => {
+  countError();
   logger.error(snapshot);
 });
 

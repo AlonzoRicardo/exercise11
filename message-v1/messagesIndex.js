@@ -3,7 +3,9 @@ const http = require("http");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("./src/winston/winston");
-const request_ratio = require("./prom/Metrics");
+const { countError } = require("./prom/Metrics");
+
+
 const {
   Validator,
   ValidationError
@@ -51,7 +53,7 @@ require("./src/queue/enqueuers/enqueueRollBack");
 const enqueue = require("./src/queue/enqueuers/enqueueCheckBalance");
 
   app.use(function(req, res, next) {
-    request_ratio();
+    countError();
     next();
   })
 
@@ -72,8 +74,6 @@ app.get("/hostname", getHostName);
 
 app.get("/version", getApiVersion);
 
-//////////////////////////////////////////
-const util = require("util");
 const Prometheus = require("prom-client");
 
 Prometheus.collectDefaultMetrics();

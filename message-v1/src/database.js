@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const dbLogger = require('./winston/dbLogger')
+const countError = require('../prom/Metrics')
 const servers = {
   primary: "mongodb_message:27017",
   replica: "replica_message:27018"
@@ -22,6 +23,7 @@ function createConnection(name, server, database) {
 
 function setupConnection(connection, backup) {
   connection.conn.on("disconnected", () => {
+    countError()
     dbLogger.error(`Node down: ${connection.name}`);
     connection.isActive = false;
     if (connection.isPrimary) {
