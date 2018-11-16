@@ -3,7 +3,7 @@ const saveMessage = require("../clients/saveMessage");
 const random = n => Math.floor(Math.random() * Math.floor(n));
 const braker = require("../../circuitBreaker");
 const logger = require('../winston/winston')
-const countError = require('../../prom/Metrics')
+const {countError} = require('../../prom/Metrics')
 
 module.exports = function(msgData, done) {
   const entireMsg = msgData;

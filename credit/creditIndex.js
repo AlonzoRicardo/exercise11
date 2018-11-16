@@ -1,3 +1,13 @@
+const Tracer = require('../src')
+// eslint-disable-next-line
+const tracer = new Tracer({
+  serviceName: 'credit',
+  options: {
+    tags: {
+      gitTag: 'Credits'
+    }
+  }
+
 require('dotenv').config()
 const http = require("http");
 const express = require("express");

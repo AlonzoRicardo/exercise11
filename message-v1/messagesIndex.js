@@ -1,10 +1,10 @@
+const tracer = require("./jaeger/jaeger");
 require("dotenv").config();
 const http = require("http");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("./src/winston/winston");
 const { countError } = require("./prom/Metrics");
-
 
 const {
   Validator,
@@ -52,11 +52,9 @@ require("./src/queue/consumers/sendConsumer");
 require("./src/queue/enqueuers/enqueueRollBack");
 const enqueue = require("./src/queue/enqueuers/enqueueCheckBalance");
 
-  app.use(function(req, res, next) {
-    countError();
-    next();
-  })
-
+app.use(function(req, res, next) {
+  next();
+});
 
 //End Points
 app.post(
@@ -76,7 +74,7 @@ app.get("/version", getApiVersion);
 
 const Prometheus = require("prom-client");
 
-Prometheus.collectDefaultMetrics();
+Prometheus.collectDefaultMetrics({ timeout: 1000 });
 
 function sendMetrics(req, res) {
   res.set("Content-Type", Prometheus.register.contentType);

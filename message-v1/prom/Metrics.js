@@ -1,12 +1,17 @@
 var client = require('prom-client');
-var gauge = new client.Gauge({name: 'Error_Gauge', help: 'Error_Gauge'});
+//Error Ratio
+var error_Gauge = new client.Gauge({name: 'Error_Gauge', help: 'Error_Gauge'});
+let count = 0;
+//var error_Gauge = new client.Gauge({name: 'Error_Gauge', help: 'Error_Gauge'});
 
 setInterval(() => {
-    gauge.set(0); // Set to 10
-}, 1000);
+    error_Gauge.set(count, new Date()); // Set to 10
+    count = 0;
+}, 2000);
 
 function countError () {
-    gauge.inc(1, new Date())
+    count++
+    //error_Gauge.inc(1, /* moment().format('YYYY-MM-DD HH:mm') */)
 }
 
 module.exports = {
